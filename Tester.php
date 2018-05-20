@@ -215,19 +215,19 @@ class Tester
         
         foreach( $this->methods as $method => $parameters )
         {
-            $method = explode(':', $method)[0];
+            $method = explode(':', $origin = $method)[0];
 
-            Comparison\Testing::start($method);
+            Comparison\Testing::start($origin);
             $returnValue = Singleton::class($this->class)->$method(...$parameters);
-            Comparison\Testing::end($method);
+            Comparison\Testing::end($origin);
 
             $this->_output
             (
                 $this->class, 
-                $method, 
+                $origin, 
                 gettype($returnValue), 
                 $returnValue, 
-                $this->compares[$method] ?? 'NULL'
+                $this->compares[$origin] ?? 'NULL'
             );
 
             $index++;
@@ -296,7 +296,7 @@ class Tester
             'returnValue' => is_scalar($returnValue) ? $returnValue : $returnType,
             'isResultCorrect' => $compare,
             'elapsedTime' => $elapsedTime,
-            'index'       => str_replace('\\', '-', $class) . '-' . $method
+            'index'       => str_replace('\\', '-', $class) . '-' . Converter::slug($method)
         ], true);
     }
 
